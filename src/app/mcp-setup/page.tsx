@@ -71,7 +71,7 @@ export default function McpSetupPage() {
               <h2 className="mb-4 font-semibold text-xl">Setup</h2>
               <div className="space-y-3">
                 {/* Cursor / IDEs */}
-                <Card className="relative bg-secondary/50">
+                <Card className="relative bg-card/80 backdrop-blur-sm">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <CardTitle>Cursor / IDEs</CardTitle>
@@ -93,7 +93,7 @@ export default function McpSetupPage() {
                 </Card>
 
                 {/* Claude Desktop */}
-                <Card className="bg-secondary/50">
+                <Card className="bg-card/80 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle>Claude Desktop</CardTitle>
                   </CardHeader>
@@ -132,7 +132,7 @@ export default function McpSetupPage() {
                 </Card>
 
                 {/* Restart Note */}
-                <Card className="bg-secondary/50">
+                <Card className="bg-card/80 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle>Restart after config</CardTitle>
                     <CardDescription>
@@ -150,7 +150,7 @@ export default function McpSetupPage() {
             <div>
               <h2 className="mb-4 font-semibold text-xl">Tools</h2>
               <div className="space-y-3">
-                <Card className="bg-secondary/50">
+                <Card className="bg-card/80 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="font-mono">
                       generate_qr_code
@@ -163,7 +163,7 @@ export default function McpSetupPage() {
                   </CardHeader>
                 </Card>
 
-                <Card className="bg-secondary/50">
+                <Card className="bg-card/80 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="font-mono">
                       get_available_styles
@@ -175,7 +175,7 @@ export default function McpSetupPage() {
                   </CardHeader>
                 </Card>
 
-                <Card className="bg-secondary/50">
+                <Card className="bg-card/80 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="font-mono">preview_qr_url</CardTitle>
                     <CardDescription>
@@ -190,7 +190,7 @@ export default function McpSetupPage() {
             {/* Available Styles */}
             <div>
               <h2 className="mb-4 font-semibold text-xl">Available styles</h2>
-              <Card className="bg-secondary/50">
+              <Card className="bg-card/80 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle>10 Beautiful Presets</CardTitle>
                   <CardDescription>
