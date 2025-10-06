@@ -23,7 +23,9 @@ export const GenerateQrCodeSchema = {
     .describe("Output format. Default: svg"),
   size: z
     .number()
+    // biome-ignore lint/style/noMagicNumbers: QR code size constraints
     .min(256)
+    // biome-ignore lint/style/noMagicNumbers: QR code size constraints
     .max(2048)
     .optional()
     .describe("QR code dimensions in pixels. Default: 768"),

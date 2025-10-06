@@ -16,7 +16,7 @@ export type QrGeneratorOptions = {
 const SVG_NS = "http://www.w3.org/2000/svg";
 const MIN_CORNER_RADIUS = 8;
 const CORNER_RADIUS_FACTOR = 0.09;
-const DEFAULT_LOGO_STROKE_PX = 20;
+const _DEFAULT_LOGO_STROKE_PX = 20;
 
 function resolveStyle(styleId: string) {
   return STYLES.find((s) => s.id === styleId) ?? STYLES[0];
@@ -51,6 +51,7 @@ function applyStyling(
     svg.insertBefore(defs, svg.firstChild);
   }
 
+  // biome-ignore lint/style/noMagicNumbers: Base-36 for random string generation
   const clipId = `qrClip-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const clipPath = document.createElementNS(SVG_NS, "clipPath");
   clipPath.setAttribute("id", clipId);
@@ -92,7 +93,7 @@ function applyStyling(
 export async function generateQrCode(
   options: QrGeneratorOptions
 ): Promise<string> {
-  const dom = setupDOMEnvironment();
+  setupDOMEnvironment();
   const style = resolveStyle(options.styleId) || STYLES[0];
 
   if (!style) {

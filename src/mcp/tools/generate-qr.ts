@@ -1,5 +1,5 @@
-import type { GenerateQrCodeInput } from "../schemas.js";
 import { generateQrCode } from "../qr-generator.js";
+import type { GenerateQrCodeInput } from "../schemas.js";
 
 export async function handleGenerateQrCode(
   input: GenerateQrCodeInput
@@ -33,6 +33,7 @@ export async function handleGenerateQrCode(
       size,
       style,
       data: `data:${mimeType};base64,${base64Data}`,
+      // biome-ignore lint/style/noMagicNumbers: URL truncation length
       message: `QR code generated successfully for: ${url.substring(0, 50)}${url.length > 50 ? "..." : ""}`,
     };
 

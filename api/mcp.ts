@@ -1,10 +1,10 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import type { VercelRequest, VercelResponse } from "@vercel/node";
 import {
-  ListToolsRequestSchema,
   CallToolRequestSchema,
+  ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { handleGenerateQrCode } from "../src/mcp/tools/generate-qr.js";
 import { handleGetAvailableStyles } from "../src/mcp/tools/get-styles.js";
 import { handlePreviewUrl } from "../src/mcp/tools/preview-url.js";
@@ -182,6 +182,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "GET") {
+    // biome-ignore lint/style/noMagicNumbers: HTTP status code
     return res.status(200).json({
       name: "qr-tool-mcp",
       version: "1.0.0",
@@ -192,6 +193,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method !== "POST") {
+    // biome-ignore lint/style/noMagicNumbers: HTTP status code
     return res.status(405).json({
       error: "Method not allowed",
       message: "This MCP server only accepts POST requests",
@@ -202,12 +204,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: () => `qr-session-${Date.now()}`,
     });
-    
+
     await server.connect(transport);
-    
+
     const response = await transport.handleRequest(req.body, res);
-    
+
     if (!res.headersSent) {
+      // biome-ignore lint/style/noMagicNumbers: HTTP status code
       res.status(200);
       res.setHeader("Content-Type", "application/json");
       res.json(response);
@@ -215,6 +218,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (error) {
     // biome-ignore lint/suspicious/noConsole: Needed for serverless logging
     console.error("MCP server error:", error);
+    // biome-ignore lint/style/noMagicNumbers: HTTP status code
     res.status(500).json({
       error: "Internal server error",
       message: error instanceof Error ? error.message : "Unknown error",
