@@ -181,7 +181,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method === "GET") {
+  // Handle GET and HEAD requests with server info (HEAD is used for health checks)
+  if (req.method === "GET" || req.method === "HEAD") {
     // biome-ignore lint/style/noMagicNumbers: HTTP status code
     return res.status(200).json({
       name: "qr-tool-mcp",
@@ -196,7 +197,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // biome-ignore lint/style/noMagicNumbers: HTTP status code
     return res.status(405).json({
       error: "Method not allowed",
-      message: "This MCP server only accepts POST requests",
+      message: "This MCP server only accepts GET, HEAD, and POST requests",
     });
   }
 
@@ -207,21 +208,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     await server.connect(transport);
 
-    const response = await transport.handleRequest(req.body, res);
+    // Set proper headers before handling
+    res.setHeader("Content-Type", "application/json");
 
+    // The transport.handleRequest will write to the response
+    await transport.handleRequest(req.body, res);
+
+    // Only send response if headers haven't been sent yet
     if (!res.headersSent) {
       // biome-ignore lint/style/noMagicNumbers: HTTP status code
-      res.status(200);
-      res.setHeader("Content-Type", "application/json");
-      res.json(response);
+      res.status(200).end();
     }
   } catch (error) {
     // biome-ignore lint/suspicious/noConsole: Needed for serverless logging
     console.error("MCP server error:", error);
-    // biome-ignore lint/style/noMagicNumbers: HTTP status code
-    res.status(500).json({
-      error: "Internal server error",
-      message: error instanceof Error ? error.message : "Unknown error",
-    });
+    if (!res.headersSent) {
+      // biome-ignore lint/style/noMagicNumbers: HTTP status code
+      res.status(500).json({
+        error: "Internal server error",
+        message: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
   }
 }
