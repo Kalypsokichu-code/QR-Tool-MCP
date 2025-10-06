@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "strict": false,
+    "verbatimModuleSyntax": false
+  },
+  "include": ["src/mcp/**/*", "src/app/qr-generator/qr-styles.ts"],
+  "exclude": ["node_modules", "dist", ".next", "src/app/**/*", "src/components/**/*", "src/hooks/**/*", "src/lib/**/*"]
+}

@@ -1,0 +1,36 @@
+import { generateQrCode } from "../qr-generator.js";
+export async function handleGenerateQrCode(input) {
+    const { url, style = "slate-ember", format = "svg", size = 768, logoPosition = "center", } = input;
+    const positionMap = {
+        center: { x: 0.5, y: 0.5 },
+        "bottom-right": { x: 0.82, y: 0.82 },
+    };
+    try {
+        const base64Data = await generateQrCode({
+            data: url,
+            styleId: style,
+            size,
+            format,
+            logoPosition: positionMap[logoPosition],
+        });
+        const mimeType = format === "svg" ? "image/svg+xml" : "image/png";
+        const result = {
+            success: true,
+            format,
+            size,
+            style,
+            data: `data:${mimeType};base64,${base64Data}`,
+            message: `QR code generated successfully for: ${url.substring(0, 50)}${url.length > 50 ? "..." : ""}`,
+        };
+        return JSON.stringify(result, null, 2);
+    }
+    catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return JSON.stringify({
+            success: false,
+            error: errorMessage,
+            message: "Failed to generate QR code",
+        }, null, 2);
+    }
+}
+//# sourceMappingURL=generate-qr.js.map

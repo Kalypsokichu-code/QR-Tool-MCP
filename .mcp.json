@@ -1,0 +1,27 @@
+{
+  "name": "qr-tool-mcp",
+  "version": "1.0.0",
+  "description": "Generate beautiful, styled QR codes with custom colors and logos via MCP",
+  "author": "Kalypso Designs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kalypsokichu-code/qr-tool-mcp"
+  },
+  "capabilities": {
+    "tools": [
+      "generate_qr_code",
+      "get_available_styles",
+      "preview_qr_url"
+    ]
+  },
+  "transport": {
+    "stdio": {
+      "command": "node",
+      "args": ["dist/mcp/index.js"]
+    },
+    "http": {
+      "url": "https://qr-tool-mcp.vercel.app/api/mcp"
+    }
+  }
+}
