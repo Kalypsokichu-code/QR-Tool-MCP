@@ -5,22 +5,22 @@ A standalone QR code generator with beautiful styling options and Model Context 
 ## Features
 
 ### Web App
-- 🎨 10 pre-designed style presets
-- 📱 Mobile-responsive design
-- 🖼️ Custom logo upload support
-- 💾 Export as SVG or PNG
-- 🎯 Logo positioning options (center, bottom-right)
-- 🌓 Dark/Light/System theme switcher
-- 🔊 Interactive sound effects with toggle control
-- ⚡ Built with Next.js 15 and React 19
-- 🎨 Full Kalypso design system styling
+- 10 pre-designed style presets
+- Mobile-responsive design
+- Custom logo upload support
+- Export as SVG or PNG
+- Logo positioning options (center, bottom-right)
+- Dark/Light/System theme switcher
+- Interactive sound effects with toggle control
+- Built with Next.js 15 and React 19
+- Full Kalypso design system styling
 
-### MCP Integration 🆕
-- 🤖 AI-powered QR code generation via Claude Desktop & Cursor
-- 🔌 HTTP and stdio transport support
-- 🎨 Access all 10 style presets programmatically
-- 📦 No browser needed - generate QR codes directly from AI tools
-- 🌐 Hosted endpoint or local deployment options
+### MCP Integration
+- AI-powered QR code generation via Claude Desktop & Cursor
+- HTTP and stdio transport support
+- Access all 10 style presets programmatically
+- No browser needed - generate QR codes directly from AI tools
+- Hosted endpoint or local deployment options
 
 ## Getting Started
 
