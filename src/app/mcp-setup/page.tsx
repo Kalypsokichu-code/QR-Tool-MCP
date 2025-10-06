@@ -61,8 +61,7 @@ export default function McpSetupPage() {
               <p className="text-muted-foreground text-sm leading-relaxed">
                 An MCP server that lets AI assistants generate custom-styled QR
                 codes. Works with Claude Desktop, Cursor, and other MCP-enabled
-                tools. Create QR codes with 10 beautiful preset styles, custom
-                logos, and multiple export formats.
+                tools.
               </p>
             </div>
 
