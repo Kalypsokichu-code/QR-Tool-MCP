@@ -2,7 +2,6 @@
   "name": "qr-tool-mcp",
   "version": "1.0.0",
   "type": "module",
-  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "npm run build:next && npm run build:mcp",

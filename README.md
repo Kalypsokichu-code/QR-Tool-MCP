@@ -172,4 +172,4 @@ Generate a shareable web preview URL for customization.
 
 ## License
 
-Private
+MIT License - see [LICENSE](./LICENSE) file for details.

@@ -61,9 +61,7 @@ export default function McpSetupPage() {
               <h2 className="mb-3 font-semibold text-xl">What is this</h2>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 An MCP server that lets AI assistants generate custom-styled QR
-                code URLs. Returns both preview URLs (for browser viewing) and
-                direct download links (instant SVG download). Works with Claude
-                Desktop, Cursor, and other MCP-enabled tools.
+                codes. Returns both preview URLs and direct download links.
               </p>
             </div>
 
@@ -155,10 +153,7 @@ export default function McpSetupPage() {
                   <CardHeader>
                     <CardTitle className="font-mono">generate_qr_url</CardTitle>
                     <CardDescription>
-                      Generate QR code URLs with custom styling. Returns both a
-                      previewUrl (to view/customize in browser) and a
-                      downloadUrl (for direct SVG download). Supports 10 visual
-                      styles.
+                      Generate QR codes with custom styling.
                     </CardDescription>
                   </CardHeader>
                 </Card>
@@ -171,6 +166,19 @@ export default function McpSetupPage() {
                     <CardDescription>
                       List all available QR code style presets with their color
                       schemes. Perfect for discovering styling options.
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+
+                <Card className="bg-card/80 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="font-mono">
+                      generate_qr_urls_batch
+                    </CardTitle>
+                    <CardDescription>
+                      Generate QR code download URLs for multiple URLs at once.
+                      Perfect for batch processing lists. Maximum 100 URLs per
+                      batch.
                     </CardDescription>
                   </CardHeader>
                 </Card>
