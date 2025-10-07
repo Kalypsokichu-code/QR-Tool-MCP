@@ -1,5 +1,6 @@
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
+import type { BatchUrlInput, PreviewUrlInput } from "../src/mcp/schemas.js";
 import { handleBatchQr } from "../src/mcp/tools/batch-qr.js";
 import { handleGetAvailableStyles } from "../src/mcp/tools/get-styles.js";
 import { handlePreviewUrl } from "../src/mcp/tools/preview-url.js";
@@ -34,7 +35,7 @@ const handler = createMcpHandler(
       },
       // biome-ignore lint/suspicious/useAwait: MCP SDK handler signature requires async
       async (args) => {
-        const result = handlePreviewUrl(args);
+        const result = handlePreviewUrl(args as PreviewUrlInput);
         return {
           content: [
             {
@@ -93,7 +94,7 @@ const handler = createMcpHandler(
       },
       // biome-ignore lint/suspicious/useAwait: MCP SDK handler signature requires async
       async (args) => {
-        const result = handleBatchQr(args);
+        const result = handleBatchQr(args as BatchUrlInput);
         return {
           content: [
             {
