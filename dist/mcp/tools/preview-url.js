@@ -1,12 +1,14 @@
-import { generatePreviewUrl } from "../qr-generator.js";
+import { generateDownloadUrl, generatePreviewUrl } from "../qr-generator.js";
 export function handlePreviewUrl(input) {
     const { url, style } = input;
     try {
         const previewUrl = generatePreviewUrl(url, style);
+        const downloadUrl = generateDownloadUrl(url, style);
         const result = {
             success: true,
             previewUrl,
-            message: "Preview URL generated. Open this link to view and customize the QR code in your browser.",
+            downloadUrl,
+            message: "QR code ready. Use downloadUrl for direct SVG download, or previewUrl to view and customize in browser.",
         };
         return JSON.stringify(result, null, 2);
     }
@@ -15,7 +17,7 @@ export function handlePreviewUrl(input) {
         return JSON.stringify({
             success: false,
             error: errorMessage,
-            message: "Failed to generate preview URL",
+            message: "Failed to generate URLs",
         }, null, 2);
     }
 }

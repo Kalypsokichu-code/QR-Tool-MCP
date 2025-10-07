@@ -23,4 +23,5 @@ export declare function getAvailableStyles(): {
     };
 }[];
 export declare function generatePreviewUrl(data: string, styleId?: string): string;
+export declare function generateDownloadUrl(data: string, styleId?: string): string;
 //# sourceMappingURL=qr-generator.d.ts.map

@@ -111,4 +111,12 @@ export function generatePreviewUrl(data, styleId) {
     });
     return `${baseUrl}/?${params.toString()}`;
 }
+export function generateDownloadUrl(data, styleId) {
+    const baseUrl = "https://qr-tool-mcp.vercel.app";
+    const params = new URLSearchParams({
+        data,
+        ...(styleId && { style: styleId }),
+    });
+    return `${baseUrl}/api/download-qr?${params.toString()}`;
+}
 //# sourceMappingURL=qr-generator.js.map

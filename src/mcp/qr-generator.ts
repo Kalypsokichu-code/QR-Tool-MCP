@@ -158,3 +158,14 @@ export function generatePreviewUrl(data: string, styleId?: string): string {
 
   return `${baseUrl}/?${params.toString()}`;
 }
+
+export function generateDownloadUrl(data: string, styleId?: string): string {
+  const baseUrl = "https://qr-tool-mcp.vercel.app";
+
+  const params = new URLSearchParams({
+    data,
+    ...(styleId && { style: styleId }),
+  });
+
+  return `${baseUrl}/api/download-qr?${params.toString()}`;
+}

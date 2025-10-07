@@ -27,7 +27,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "generate_qr_code",
         description:
-          "Generate a QR code with custom styling. Returns a shareable URL where users can view, customize, and download the QR code. Always returns a working URL to https://qr-tool-mcp.vercel.app.",
+          "Generate a QR code with custom styling. Returns both a previewUrl (to view/customize in browser) and a downloadUrl (for direct SVG download). Both are working URLs to https://qr-tool-mcp.vercel.app.",
         inputSchema: {
           type: "object",
           properties: {
