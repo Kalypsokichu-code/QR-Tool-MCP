@@ -4,12 +4,38 @@ import type { BatchUrlInput } from "../schemas.js";
 export function handleBatchQr(input: BatchUrlInput): string {
   const { urls, style } = input;
 
+  // Validate input
+  if (!Array.isArray(urls) || urls.length === 0) {
+    return JSON.stringify(
+      {
+        success: false,
+        error: "Missing or invalid required parameter: urls",
+        message:
+          "The 'urls' parameter is required and must be a non-empty array",
+      },
+      null,
+      2
+    );
+  }
+
   try {
-    const results = urls.map((url, index) => ({
-      index,
-      url,
-      downloadUrl: generateDownloadUrl(url, style),
-    }));
+    const results = urls.map((url, index) => {
+      // Validate each URL
+      if (!url || typeof url !== "string" || url.trim() === "") {
+        return {
+          index,
+          url,
+          error: "Invalid or empty URL",
+          downloadUrl: null,
+        };
+      }
+
+      return {
+        index,
+        url,
+        downloadUrl: generateDownloadUrl(url, style),
+      };
+    });
 
     const result = {
       success: true,

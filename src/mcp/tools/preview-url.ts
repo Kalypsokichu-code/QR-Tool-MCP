@@ -4,6 +4,20 @@ import type { PreviewUrlInput } from "../schemas.js";
 export function handlePreviewUrl(input: PreviewUrlInput): string {
   const { url, style } = input;
 
+  // Validate that url is provided
+  if (!url || typeof url !== "string" || url.trim() === "") {
+    return JSON.stringify(
+      {
+        success: false,
+        error: "Missing required parameter: url",
+        message:
+          "The 'url' parameter is required and must be a non-empty string",
+      },
+      null,
+      2
+    );
+  }
+
   try {
     const previewUrl = generatePreviewUrl(url, style);
     const downloadUrl = generateDownloadUrl(url, style);

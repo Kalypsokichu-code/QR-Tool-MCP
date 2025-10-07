@@ -104,6 +104,9 @@ export function getAvailableStyles() {
     }));
 }
 export function generatePreviewUrl(data, styleId) {
+    if (!data) {
+        throw new Error("Data parameter is required");
+    }
     const baseUrl = "https://qr-tool-mcp.vercel.app";
     const params = new URLSearchParams({
         data,
@@ -112,6 +115,9 @@ export function generatePreviewUrl(data, styleId) {
     return `${baseUrl}/?${params.toString()}`;
 }
 export function generateDownloadUrl(data, styleId) {
+    if (!data) {
+        throw new Error("Data parameter is required");
+    }
     const baseUrl = "https://qr-tool-mcp.vercel.app";
     const params = new URLSearchParams({
         data,

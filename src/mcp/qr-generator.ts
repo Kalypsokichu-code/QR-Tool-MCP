@@ -149,6 +149,10 @@ export function getAvailableStyles() {
 }
 
 export function generatePreviewUrl(data: string, styleId?: string): string {
+  if (!data) {
+    throw new Error("Data parameter is required");
+  }
+
   const baseUrl = "https://qr-tool-mcp.vercel.app";
 
   const params = new URLSearchParams({
@@ -160,6 +164,10 @@ export function generatePreviewUrl(data: string, styleId?: string): string {
 }
 
 export function generateDownloadUrl(data: string, styleId?: string): string {
+  if (!data) {
+    throw new Error("Data parameter is required");
+  }
+
   const baseUrl = "https://qr-tool-mcp.vercel.app";
 
   const params = new URLSearchParams({
