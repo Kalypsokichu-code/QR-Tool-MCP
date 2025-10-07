@@ -13,6 +13,7 @@ const server = new Server({
         tools: {},
     },
 });
+// biome-ignore lint/suspicious/useAwait: MCP SDK requires async
 server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {
         tools: [
@@ -100,6 +101,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     try {
         switch (name) {
             case "generate_qr_code": {
+                // biome-ignore lint/suspicious/noExplicitAny: MCP SDK requires dynamic args
                 const result = await handleGenerateQrCode(args);
                 return {
                     content: [
@@ -122,6 +124,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 };
             }
             case "preview_qr_url": {
+                // biome-ignore lint/suspicious/noExplicitAny: MCP SDK requires dynamic args
                 const result = handlePreviewUrl(args);
                 return {
                     content: [
@@ -156,9 +159,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
     const transport = new StdioServerTransport();
     await server.connect(transport);
+    // biome-ignore lint/suspicious/noConsole: Needed for stdio logging
     console.error("QR Tool MCP Server running on stdio");
 }
 main().catch((error) => {
+    // biome-ignore lint/suspicious/noConsole: Needed for error logging
     console.error("Fatal error:", error);
     process.exit(1);
 });

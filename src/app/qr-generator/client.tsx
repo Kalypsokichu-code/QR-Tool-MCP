@@ -51,7 +51,7 @@ export function QrClient() {
 
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement | null>(null);
+  const [svg, setSvg] = useState<SVGSVGElement | null>(null);
 
   const [fileName] = useState("qr-code");
   const [logoSvgContent, setLogoSvgContent] = useState<string | null>(null);
@@ -93,7 +93,7 @@ export function QrClient() {
     if (!containerRef.current) {
       return;
     }
-    const { svg } = await rebuildQr({
+    const { svg: newSvg } = await rebuildQr({
       container: containerRef.current,
       options,
       logoSvgContent,
@@ -101,7 +101,7 @@ export function QrClient() {
       logoStrokePx,
       logoPosition,
     });
-    svgRef.current = svg;
+    setSvg(newSvg);
   }, [options, logoSvgContent, logoSizePercent, logoStrokePx, logoPosition]);
 
   useEffect(() => {
@@ -145,11 +145,7 @@ export function QrClient() {
     <MobileToolWrapper>
       <Preview containerRef={containerRef} />
 
-      <DownloadActions
-        fileName={fileName}
-        size={options.size}
-        svg={svgRef.current}
-      />
+      <DownloadActions fileName={fileName} size={options.size} svg={svg} />
 
       <MobileCard className={isMobileOnly ? "mt-2" : "mt-6"}>
         <MobileControlPanel>
@@ -189,8 +185,8 @@ export function QrClient() {
           <MobileControlPanel>
             <LogoOptionsPanel
               logoSvgContent={logoSvgContent}
-              onSetLogoContent={(svg) => {
-                setLogoSvgContent(svg);
+              onSetLogoContent={(content) => {
+                setLogoSvgContent(content);
               }}
             />
 
@@ -239,8 +235,8 @@ export function QrClient() {
         {!logoSvgContent && (
           <LogoOptionsPanel
             logoSvgContent={logoSvgContent}
-            onSetLogoContent={(svg) => {
-              setLogoSvgContent(svg);
+            onSetLogoContent={(content) => {
+              setLogoSvgContent(content);
             }}
           />
         )}

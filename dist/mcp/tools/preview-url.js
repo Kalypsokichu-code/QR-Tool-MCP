@@ -6,7 +6,7 @@ export function handlePreviewUrl(input) {
         const result = {
             success: true,
             previewUrl,
-            message: `Preview URL generated. Open this link to view and customize the QR code in your browser.`,
+            message: "Preview URL generated. Open this link to view and customize the QR code in your browser.",
         };
         return JSON.stringify(result, null, 2);
     }

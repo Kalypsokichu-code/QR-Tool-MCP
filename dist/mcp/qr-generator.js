@@ -4,8 +4,7 @@ import { STYLES } from "../app/qr-generator/qr-styles.js";
 const SVG_NS = "http://www.w3.org/2000/svg";
 const MIN_CORNER_RADIUS = 8;
 const CORNER_RADIUS_FACTOR = 0.09;
-const DEFAULT_LOGO_SIZE_PERCENT = 20;
-const DEFAULT_LOGO_STROKE_PX = 20;
+const _DEFAULT_LOGO_STROKE_PX = 20;
 function resolveStyle(styleId) {
     return STYLES.find((s) => s.id === styleId) ?? STYLES[0];
 }
@@ -27,6 +26,7 @@ function applyStyling(svg, width, height, backgroundColor) {
         defs = document.createElementNS(SVG_NS, "defs");
         svg.insertBefore(defs, svg.firstChild);
     }
+    // biome-ignore lint/style/noMagicNumbers: Base-36 for random string generation
     const clipId = `qrClip-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const clipPath = document.createElementNS(SVG_NS, "clipPath");
     clipPath.setAttribute("id", clipId);
@@ -59,11 +59,12 @@ function applyStyling(svg, width, height, backgroundColor) {
     svg.appendChild(group);
 }
 export async function generateQrCode(options) {
-    const dom = setupDOMEnvironment();
+    setupDOMEnvironment();
     const style = resolveStyle(options.styleId) || STYLES[0];
     if (!style) {
         throw new Error("Failed to resolve QR code style");
     }
+    // biome-ignore lint/suspicious/noExplicitAny: QRCodeStyling has constructor type issues
     const qr = new QRCodeStyling({
         type: "svg",
         width: options.size,
@@ -103,13 +104,11 @@ export function getAvailableStyles() {
     }));
 }
 export function generatePreviewUrl(data, styleId) {
-    const baseUrl = process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const baseUrl = "https://qr-tool-mcp.vercel.app";
     const params = new URLSearchParams({
         data,
         ...(styleId && { style: styleId }),
     });
-    return `${baseUrl}/qr-generator?${params.toString()}`;
+    return `${baseUrl}/?${params.toString()}`;
 }
 //# sourceMappingURL=qr-generator.js.map

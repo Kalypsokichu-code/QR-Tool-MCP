@@ -5,7 +5,6 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { handleGenerateQrCode } from "../src/mcp/tools/generate-qr.js";
 import { handleGetAvailableStyles } from "../src/mcp/tools/get-styles.js";
 import { handlePreviewUrl } from "../src/mcp/tools/preview-url.js";
 
@@ -28,7 +27,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "generate_qr_code",
         description:
-          "Generate a QR code with custom styling. Returns base64-encoded image data that can be saved or displayed. Supports multiple visual styles and optional logo embedding.",
+          "Generate a QR code with custom styling. Returns a shareable URL where users can view, customize, and download the QR code. Always returns a working URL to https://qr-tool-mcp.vercel.app.",
         inputSchema: {
           type: "object",
           properties: {
@@ -53,28 +52,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               description:
                 "Visual style preset for the QR code. Default: slate-ember",
             },
-            format: {
-              type: "string",
-              enum: ["svg", "png"],
-              description: "Output format. Default: svg",
-            },
-            size: {
-              type: "number",
-              minimum: 256,
-              maximum: 2048,
-              description:
-                "QR code dimensions in pixels. Default: 768. Range: 256-2048",
-            },
-            logoUrl: {
-              type: "string",
-              description:
-                "Optional URL to a logo/icon to embed in the QR code",
-            },
-            logoPosition: {
-              type: "string",
-              enum: ["center", "bottom-right"],
-              description: "Logo placement. Default: center",
-            },
           },
           required: ["url"],
         },
@@ -88,29 +65,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {},
         },
       },
-      {
-        name: "preview_qr_url",
-        description:
-          "Generate a shareable web preview URL for a QR code. Returns a link to the web interface where users can view, customize, and download the QR code.",
-        inputSchema: {
-          type: "object",
-          properties: {
-            url: {
-              type: "string",
-              description: "The URL or text to encode",
-            },
-            style: {
-              type: "string",
-              description: "Style preset ID. Default: slate-ember",
-            },
-          },
-          required: ["url"],
-        },
-      },
     ],
   };
 });
 
+// biome-ignore lint/suspicious/useAwait: MCP SDK requires async
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
@@ -118,7 +77,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     switch (name) {
       case "generate_qr_code": {
         // biome-ignore lint/suspicious/noExplicitAny: MCP SDK requires dynamic args
-        const result = await handleGenerateQrCode(args as any);
+        const result = handlePreviewUrl(args as any);
         return {
           content: [
             {
@@ -131,19 +90,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "get_available_styles": {
         const result = handleGetAvailableStyles();
-        return {
-          content: [
-            {
-              type: "text",
-              text: result,
-            },
-          ],
-        };
-      }
-
-      case "preview_qr_url": {
-        // biome-ignore lint/suspicious/noExplicitAny: MCP SDK requires dynamic args
-        const result = handlePreviewUrl(args as any);
         return {
           content: [
             {
@@ -187,8 +133,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({
       name: "qr-tool-mcp",
       version: "1.0.0",
-      description: "Generate beautiful, styled QR codes via MCP",
-      tools: ["generate_qr_code", "get_available_styles", "preview_qr_url"],
+      description:
+        "Generate beautiful, styled QR codes via MCP. Returns shareable URLs to https://qr-tool-mcp.vercel.app",
+      tools: ["generate_qr_code", "get_available_styles"],
       transport: "http",
     });
   }

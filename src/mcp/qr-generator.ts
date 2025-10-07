@@ -149,14 +149,12 @@ export function getAvailableStyles() {
 }
 
 export function generatePreviewUrl(data: string, styleId?: string): string {
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const baseUrl = "https://qr-tool-mcp.vercel.app";
 
   const params = new URLSearchParams({
     data,
     ...(styleId && { style: styleId }),
   });
 
-  return `${baseUrl}/qr-generator?${params.toString()}`;
+  return `${baseUrl}/?${params.toString()}`;
 }
