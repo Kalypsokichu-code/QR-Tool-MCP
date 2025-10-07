@@ -36,6 +36,8 @@ const handler = createMcpHandler(
       // biome-ignore lint/suspicious/useAwait: MCP SDK handler signature requires async
       async (args) => {
         try {
+          // biome-ignore lint/suspicious/noConsole: Debug logging
+          console.log("generate_qr_url args:", JSON.stringify(args));
           const result = handlePreviewUrl(args as PreviewUrlInput);
           return {
             content: [
@@ -48,6 +50,8 @@ const handler = createMcpHandler(
         } catch (error) {
           const errorMessage =
             error instanceof Error ? error.message : String(error);
+          // biome-ignore lint/suspicious/noConsole: Error logging
+          console.error("generate_qr_url error:", errorMessage);
           return {
             content: [
               {
@@ -56,6 +60,7 @@ const handler = createMcpHandler(
                   {
                     success: false,
                     error: errorMessage,
+                    receivedArgs: args,
                     message: "Tool execution failed",
                   },
                   null,
@@ -117,6 +122,8 @@ const handler = createMcpHandler(
       // biome-ignore lint/suspicious/useAwait: MCP SDK handler signature requires async
       async (args) => {
         try {
+          // biome-ignore lint/suspicious/noConsole: Debug logging
+          console.log("generate_qr_urls_batch args:", JSON.stringify(args));
           const result = handleBatchQr(args as BatchUrlInput);
           return {
             content: [
@@ -129,6 +136,8 @@ const handler = createMcpHandler(
         } catch (error) {
           const errorMessage =
             error instanceof Error ? error.message : String(error);
+          // biome-ignore lint/suspicious/noConsole: Error logging
+          console.error("generate_qr_urls_batch error:", errorMessage);
           return {
             content: [
               {
@@ -137,6 +146,7 @@ const handler = createMcpHandler(
                   {
                     success: false,
                     error: errorMessage,
+                    receivedArgs: args,
                     message: "Tool execution failed",
                   },
                   null,
