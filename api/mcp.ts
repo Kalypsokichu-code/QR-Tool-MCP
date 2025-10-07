@@ -35,15 +35,37 @@ const handler = createMcpHandler(
       },
       // biome-ignore lint/suspicious/useAwait: MCP SDK handler signature requires async
       async (args) => {
-        const result = handlePreviewUrl(args as PreviewUrlInput);
-        return {
-          content: [
-            {
-              type: "text",
-              text: result,
-            },
-          ],
-        };
+        try {
+          const result = handlePreviewUrl(args as PreviewUrlInput);
+          return {
+            content: [
+              {
+                type: "text",
+                text: result,
+              },
+            ],
+          };
+        } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : String(error);
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  {
+                    success: false,
+                    error: errorMessage,
+                    message: "Tool execution failed",
+                  },
+                  null,
+                  2
+                ),
+              },
+            ],
+            isError: true,
+          };
+        }
       }
     );
 
@@ -94,15 +116,37 @@ const handler = createMcpHandler(
       },
       // biome-ignore lint/suspicious/useAwait: MCP SDK handler signature requires async
       async (args) => {
-        const result = handleBatchQr(args as BatchUrlInput);
-        return {
-          content: [
-            {
-              type: "text",
-              text: result,
-            },
-          ],
-        };
+        try {
+          const result = handleBatchQr(args as BatchUrlInput);
+          return {
+            content: [
+              {
+                type: "text",
+                text: result,
+              },
+            ],
+          };
+        } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : String(error);
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  {
+                    success: false,
+                    error: errorMessage,
+                    message: "Tool execution failed",
+                  },
+                  null,
+                  2
+                ),
+              },
+            ],
+            isError: true,
+          };
+        }
       }
     );
   },
