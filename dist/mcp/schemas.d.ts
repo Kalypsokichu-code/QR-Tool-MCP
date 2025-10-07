@@ -29,6 +29,10 @@ export declare const PreviewUrlSchema: {
     url: z.ZodString;
     style: z.ZodOptional<z.ZodString>;
 };
+export declare const BatchUrlSchema: {
+    urls: z.ZodArray<z.ZodString>;
+    style: z.ZodOptional<z.ZodString>;
+};
 export type GenerateQrCodeInput = {
     url: string;
     style?: string;
@@ -39,6 +43,10 @@ export type GenerateQrCodeInput = {
 };
 export type PreviewUrlInput = {
     url: string;
+    style?: string;
+};
+export type BatchUrlInput = {
+    urls: string[];
     style?: string;
 };
 //# sourceMappingURL=schemas.d.ts.map

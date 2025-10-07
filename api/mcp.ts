@@ -5,6 +5,7 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { handleBatchQr } from "../src/mcp/tools/batch-qr.js";
 import { handleGetAvailableStyles } from "../src/mcp/tools/get-styles.js";
 import { handlePreviewUrl } from "../src/mcp/tools/preview-url.js";
 
@@ -65,6 +66,42 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {},
         },
       },
+      {
+        name: "generate_qr_urls_batch",
+        description:
+          "Generate QR code download URLs for multiple URLs at once. Perfect for batch processing CSV files or lists. Returns an array of results with index, original URL, and downloadUrl for each. Maximum 100 URLs per batch.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            urls: {
+              type: "array",
+              items: {
+                type: "string",
+              },
+              maxItems: 100,
+              description: "Array of URLs or text content to encode (max 100)",
+            },
+            style: {
+              type: "string",
+              enum: [
+                "slate-ember",
+                "ink-lime",
+                "charcoal-cyan",
+                "night-sky",
+                "graphite-gold",
+                "espresso-rose",
+                "plum-ice",
+                "forest-mint",
+                "cocoa-orange",
+                "mono-high",
+              ],
+              description:
+                "Style preset to apply to all QR codes. Default: slate-ember",
+            },
+          },
+          required: ["urls"],
+        },
+      },
     ],
   };
 });
@@ -90,6 +127,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "get_available_styles": {
         const result = handleGetAvailableStyles();
+        return {
+          content: [
+            {
+              type: "text",
+              text: result,
+            },
+          ],
+        };
+      }
+
+      case "generate_qr_urls_batch": {
+        // biome-ignore lint/suspicious/noExplicitAny: MCP SDK requires dynamic args
+        const result = handleBatchQr(args as any);
         return {
           content: [
             {
@@ -135,7 +185,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       version: "1.0.0",
       description:
         "Generate beautiful, styled QR codes via MCP. Returns shareable URLs to https://qr-tool-mcp.vercel.app",
-      tools: ["generate_qr_url", "get_available_styles"],
+      tools: [
+        "generate_qr_url",
+        "get_available_styles",
+        "generate_qr_urls_batch",
+      ],
       transport: "http",
     });
   }

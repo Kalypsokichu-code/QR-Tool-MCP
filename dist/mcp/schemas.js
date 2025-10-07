@@ -46,4 +46,15 @@ export const PreviewUrlSchema = {
         .optional()
         .describe("Style preset ID. Default: slate-ember"),
 };
+export const BatchUrlSchema = {
+    urls: z
+        .array(z.string())
+        // biome-ignore lint/style/noMagicNumbers: Batch processing limit
+        .max(100)
+        .describe("Array of URLs or text content to encode (max 100)"),
+    style: z
+        .string()
+        .optional()
+        .describe("Style preset ID to apply to all QR codes. Default: slate-ember"),
+};
 //# sourceMappingURL=schemas.js.map
