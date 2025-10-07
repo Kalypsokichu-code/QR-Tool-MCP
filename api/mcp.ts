@@ -25,9 +25,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
       {
-        name: "generate_qr_code",
+        name: "generate_qr_url",
         description:
-          "Generate a QR code with custom styling. Returns both a previewUrl (to view/customize in browser) and a downloadUrl (for direct SVG download). Both are working URLs to https://qr-tool-mcp.vercel.app.",
+          "Generate QR code URLs with custom styling. Returns both a previewUrl (to view/customize in browser) and a downloadUrl (for direct SVG download). Both are working URLs to https://qr-tool-mcp.vercel.app.",
         inputSchema: {
           type: "object",
           properties: {
@@ -75,7 +75,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   try {
     switch (name) {
-      case "generate_qr_code": {
+      case "generate_qr_url": {
         // biome-ignore lint/suspicious/noExplicitAny: MCP SDK requires dynamic args
         const result = handlePreviewUrl(args as any);
         return {
@@ -135,7 +135,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       version: "1.0.0",
       description:
         "Generate beautiful, styled QR codes via MCP. Returns shareable URLs to https://qr-tool-mcp.vercel.app",
-      tools: ["generate_qr_code", "get_available_styles"],
+      tools: ["generate_qr_url", "get_available_styles"],
       transport: "http",
     });
   }
