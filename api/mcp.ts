@@ -1,6 +1,5 @@
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
-import type { BatchUrlInput, PreviewUrlInput } from "../src/mcp/schemas.js";
 import { handleBatchQr } from "../src/mcp/tools/batch-qr.js";
 import { handleGetAvailableStyles } from "../src/mcp/tools/get-styles.js";
 import { handlePreviewUrl } from "../src/mcp/tools/preview-url.js";
@@ -34,11 +33,11 @@ const handler = createMcpHandler(
           ),
       },
       // biome-ignore lint/suspicious/useAwait: MCP SDK handler signature requires async
-      async (args) => {
+      async ({ url, style }) => {
         try {
           // biome-ignore lint/suspicious/noConsole: Debug logging
-          console.log("generate_qr_url args:", JSON.stringify(args));
-          const result = handlePreviewUrl(args as PreviewUrlInput);
+          console.log("generate_qr_url params:", { url, style });
+          const result = handlePreviewUrl({ url, style });
           return {
             content: [
               {
@@ -60,7 +59,7 @@ const handler = createMcpHandler(
                   {
                     success: false,
                     error: errorMessage,
-                    receivedArgs: args,
+                    receivedParams: { url, style },
                     message: "Tool execution failed",
                   },
                   null,
@@ -120,11 +119,14 @@ const handler = createMcpHandler(
           ),
       },
       // biome-ignore lint/suspicious/useAwait: MCP SDK handler signature requires async
-      async (args) => {
+      async ({ urls, style }) => {
         try {
           // biome-ignore lint/suspicious/noConsole: Debug logging
-          console.log("generate_qr_urls_batch args:", JSON.stringify(args));
-          const result = handleBatchQr(args as BatchUrlInput);
+          console.log("generate_qr_urls_batch params:", {
+            urlsCount: urls?.length,
+            style,
+          });
+          const result = handleBatchQr({ urls, style });
           return {
             content: [
               {
@@ -146,7 +148,7 @@ const handler = createMcpHandler(
                   {
                     success: false,
                     error: errorMessage,
-                    receivedArgs: args,
+                    receivedParams: { urlsCount: urls?.length, style },
                     message: "Tool execution failed",
                   },
                   null,
