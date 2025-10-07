@@ -48,7 +48,8 @@ export default function McpSetupPage() {
             QR Tool MCP
           </h1>
           <p className="text-lg text-muted-foreground">
-            Generate beautiful, styled QR codes via Model Context Protocol
+            Generate beautiful QR code URLs with instant preview and download
+            links via Model Context Protocol
           </p>
         </div>
 
@@ -60,8 +61,9 @@ export default function McpSetupPage() {
               <h2 className="mb-3 font-semibold text-xl">What is this</h2>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 An MCP server that lets AI assistants generate custom-styled QR
-                codes. Works with Claude Desktop, Cursor, and other MCP-enabled
-                tools.
+                code URLs. Returns both preview URLs (for browser viewing) and
+                direct download links (instant SVG download). Works with Claude
+                Desktop, Cursor, and other MCP-enabled tools.
               </p>
             </div>
 
@@ -151,13 +153,12 @@ export default function McpSetupPage() {
               <div className="space-y-3">
                 <Card className="bg-card/80 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="font-mono">
-                      generate_qr_code
-                    </CardTitle>
+                    <CardTitle className="font-mono">generate_qr_url</CardTitle>
                     <CardDescription>
-                      Generate a styled QR code with custom options. Supports 10
-                      visual styles, logo embedding, and multiple formats
-                      (SVG/PNG).
+                      Generate QR code URLs with custom styling. Returns both a
+                      previewUrl (to view/customize in browser) and a
+                      downloadUrl (for direct SVG download). Supports 10 visual
+                      styles.
                     </CardDescription>
                   </CardHeader>
                 </Card>
@@ -170,16 +171,6 @@ export default function McpSetupPage() {
                     <CardDescription>
                       List all available QR code style presets with their color
                       schemes. Perfect for discovering styling options.
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-
-                <Card className="bg-card/80 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="font-mono">preview_qr_url</CardTitle>
-                    <CardDescription>
-                      Generate a shareable web preview URL where users can view,
-                      customize, and download the QR code.
                     </CardDescription>
                   </CardHeader>
                 </Card>
