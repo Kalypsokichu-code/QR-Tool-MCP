@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "npm run build:mcp && next dev",
-    "build": "npm run build:mcp && npm run build:next",
+    "dev": "next dev",
+    "build": "npm run build:next && npm run build:mcp",
     "build:next": "next build",
     "build:mcp": "tsc --project tsconfig.mcp.json",
     "start": "next start",
