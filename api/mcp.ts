@@ -1,84 +1,137 @@
-import { createMcpHandler } from "mcp-handler";
-import { z } from "zod";
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { handleBatchQr } from "../src/mcp/tools/batch-qr.js";
 import { handleGetAvailableStyles } from "../src/mcp/tools/get-styles.js";
 import { handlePreviewUrl } from "../src/mcp/tools/preview-url.js";
 
-// Create the MCP handler using mcp-handler for proper Vercel support
-const handler = createMcpHandler(
-  (server) => {
-    server.tool(
-      "generate_qr_url",
-      "Generate QR code URLs with custom styling. Returns both a previewUrl (to view/customize in browser) and a downloadUrl (for direct SVG download). Both are working URLs to https://qr-tool-mcp.vercel.app.",
-      {
-        url: z
-          .string()
-          .describe("The URL or text content to encode in the QR code"),
-        style: z
-          .enum([
-            "slate-ember",
-            "ink-lime",
-            "charcoal-cyan",
-            "night-sky",
-            "graphite-gold",
-            "espresso-rose",
-            "plum-ice",
-            "forest-mint",
-            "cocoa-orange",
-            "mono-high",
-          ])
-          .optional()
-          .describe(
-            "Visual style preset for the QR code. Default: slate-ember"
-          ),
-      },
-      // biome-ignore lint/suspicious/useAwait: MCP SDK handler signature requires async
-      async ({ url, style }) => {
-        try {
-          // biome-ignore lint/suspicious/noConsole: Debug logging
-          console.log("generate_qr_url params:", { url, style });
-          const result = handlePreviewUrl({ url, style });
-          return {
-            content: [
-              {
-                type: "text",
-                text: result,
-              },
-            ],
-          };
-        } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : String(error);
-          // biome-ignore lint/suspicious/noConsole: Error logging
-          console.error("generate_qr_url error:", errorMessage);
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify(
-                  {
-                    success: false,
-                    error: errorMessage,
-                    receivedParams: { url, style },
-                    message: "Tool execution failed",
-                  },
-                  null,
-                  2
-                ),
-              },
-            ],
-            isError: true,
-          };
-        }
-      }
-    );
+// Create the MCP server using the low-level API
+const server = new Server(
+  {
+    name: "qr-tool-mcp",
+    version: "1.0.0",
+  },
+  {
+    capabilities: {
+      tools: {},
+    },
+  }
+);
 
-    server.tool(
-      "get_available_styles",
-      "Get a list of all available QR code style presets with their color schemes. Use this to discover styling options before generating QR codes.",
-      {},
-      // biome-ignore lint/suspicious/useAwait: MCP SDK handler signature requires async
-      async () => {
+// Handle tool listing
+// biome-ignore lint/suspicious/useAwait: MCP SDK requires async
+server.setRequestHandler(ListToolsRequestSchema, async () => {
+  return {
+    tools: [
+      {
+        name: "generate_qr_url",
+        description:
+          "Generate QR code URLs with custom styling. Returns both a previewUrl (to view/customize in browser) and a downloadUrl (for direct SVG download). Both are working URLs to https://qr-tool-mcp.vercel.app.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            url: {
+              type: "string",
+              description: "The URL or text content to encode in the QR code",
+            },
+            style: {
+              type: "string",
+              enum: [
+                "slate-ember",
+                "ink-lime",
+                "charcoal-cyan",
+                "night-sky",
+                "graphite-gold",
+                "espresso-rose",
+                "plum-ice",
+                "forest-mint",
+                "cocoa-orange",
+                "mono-high",
+              ],
+              description:
+                "Visual style preset for the QR code. Default: slate-ember",
+            },
+          },
+          required: ["url"],
+        },
+      },
+      {
+        name: "get_available_styles",
+        description:
+          "Get a list of all available QR code style presets with their color schemes. Use this to discover styling options before generating QR codes.",
+        inputSchema: {
+          type: "object",
+          properties: {},
+        },
+      },
+      {
+        name: "generate_qr_urls_batch",
+        description:
+          "Generate QR code download URLs for multiple URLs at once. Perfect for batch processing CSV files or lists. Returns an array of results with index, original URL, and downloadUrl for each. Maximum 100 URLs per batch.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            urls: {
+              type: "array",
+              items: {
+                type: "string",
+              },
+              maxItems: 100,
+              description: "Array of URLs or text content to encode (max 100)",
+            },
+            style: {
+              type: "string",
+              enum: [
+                "slate-ember",
+                "ink-lime",
+                "charcoal-cyan",
+                "night-sky",
+                "graphite-gold",
+                "espresso-rose",
+                "plum-ice",
+                "forest-mint",
+                "cocoa-orange",
+                "mono-high",
+              ],
+              description:
+                "Style preset to apply to all QR codes. Default: slate-ember",
+            },
+          },
+          required: ["urls"],
+        },
+      },
+    ],
+  };
+});
+
+// Handle tool calls
+// biome-ignore lint/suspicious/useAwait: MCP SDK requires async handler
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  const { name, arguments: args } = request.params;
+
+  try {
+    switch (name) {
+      case "generate_qr_url": {
+        // biome-ignore lint/suspicious/noExplicitAny: MCP SDK dynamic args
+        const { url, style } = args as any;
+        // biome-ignore lint/suspicious/noConsole: Debug logging
+        console.log("generate_qr_url params:", { url, style });
+        const result = handlePreviewUrl({ url, style });
+        return {
+          content: [
+            {
+              type: "text",
+              text: result,
+            },
+          ],
+        };
+      }
+
+      case "get_available_styles": {
         const result = handleGetAvailableStyles();
         return {
           content: [
@@ -89,88 +142,101 @@ const handler = createMcpHandler(
           ],
         };
       }
-    );
 
-    server.tool(
-      "generate_qr_urls_batch",
-      "Generate QR code download URLs for multiple URLs at once. Perfect for batch processing CSV files or lists. Returns an array of results with index, original URL, and downloadUrl for each. Maximum 100 URLs per batch.",
-      {
-        urls: z
-          .array(z.string())
-          // biome-ignore lint/style/noMagicNumbers: Max batch size limit
-          .max(100)
-          .describe("Array of URLs or text content to encode (max 100)"),
-        style: z
-          .enum([
-            "slate-ember",
-            "ink-lime",
-            "charcoal-cyan",
-            "night-sky",
-            "graphite-gold",
-            "espresso-rose",
-            "plum-ice",
-            "forest-mint",
-            "cocoa-orange",
-            "mono-high",
-          ])
-          .optional()
-          .describe(
-            "Style preset to apply to all QR codes. Default: slate-ember"
-          ),
-      },
-      // biome-ignore lint/suspicious/useAwait: MCP SDK handler signature requires async
-      async ({ urls, style }) => {
-        try {
-          // biome-ignore lint/suspicious/noConsole: Debug logging
-          console.log("generate_qr_urls_batch params:", {
-            urlsCount: urls?.length,
-            style,
-          });
-          const result = handleBatchQr({ urls, style });
-          return {
-            content: [
-              {
-                type: "text",
-                text: result,
-              },
-            ],
-          };
-        } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : String(error);
-          // biome-ignore lint/suspicious/noConsole: Error logging
-          console.error("generate_qr_urls_batch error:", errorMessage);
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify(
-                  {
-                    success: false,
-                    error: errorMessage,
-                    receivedParams: { urlsCount: urls?.length, style },
-                    message: "Tool execution failed",
-                  },
-                  null,
-                  2
-                ),
-              },
-            ],
-            isError: true,
-          };
-        }
+      case "generate_qr_urls_batch": {
+        // biome-ignore lint/suspicious/noExplicitAny: MCP SDK dynamic args
+        const { urls, style } = args as any;
+        // biome-ignore lint/suspicious/noConsole: Debug logging
+        console.log("generate_qr_urls_batch params:", {
+          urlsCount: urls?.length,
+          style,
+        });
+        const result = handleBatchQr({ urls, style });
+        return {
+          content: [
+            {
+              type: "text",
+              text: result,
+            },
+          ],
+        };
       }
-    );
-  },
-  {
-    // Server options
-  },
-  {
-    // Handler options
-    basePath: "/api",
-    maxDuration: 60,
-    verboseLogs: true,
-  }
-);
 
-export { handler as GET, handler as POST };
+      default:
+        throw new Error(`Unknown tool: ${name}`);
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    // biome-ignore lint/suspicious/noConsole: Error logging
+    console.error(`Tool execution error (${name}):`, errorMessage);
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(
+            {
+              success: false,
+              error: errorMessage,
+              message: `Tool execution failed: ${name}`,
+            },
+            null,
+            2
+          ),
+        },
+      ],
+      isError: true,
+    };
+  }
+});
+
+// Handler function for Vercel serverless
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Only allow POST requests
+  if (req.method !== "POST") {
+    // biome-ignore lint/style/noMagicNumbers: Standard HTTP status code
+    res.status(405).json({
+      jsonrpc: "2.0",
+      error: {
+        code: -32_000,
+        message: "Method Not Allowed. Use POST.",
+      },
+      id: null,
+    });
+    return;
+  }
+
+  try {
+    // Create a new transport for each request (stateless mode)
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined,
+      enableJsonResponse: true,
+    });
+
+    res.on("close", () => {
+      transport.close();
+    });
+
+    await server.connect(transport);
+    await transport.handleRequest(req, res, req.body);
+  } catch (error) {
+    // biome-ignore lint/suspicious/noConsole: Error logging
+    console.error("Error handling MCP request:", error);
+    if (!res.writableEnded) {
+      // biome-ignore lint/style/noMagicNumbers: Standard HTTP status code
+      res.status(500).json({
+        jsonrpc: "2.0",
+        error: {
+          code: -32_603,
+          message: "Internal server error",
+        },
+        id: null,
+      });
+    }
+  }
+}
+
+export const config = {
+  api: {
+    bodyParser: true,
+  },
+};
