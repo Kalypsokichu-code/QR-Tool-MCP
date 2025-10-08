@@ -1,8 +1,8 @@
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
-import { handleBatchQr } from "../dist/mcp/tools/batch-qr.js";
-import { handleGetAvailableStyles } from "../dist/mcp/tools/get-styles.js";
-import { handlePreviewUrl } from "../dist/mcp/tools/preview-url.js";
+import { handleBatchQr } from "../src/mcp/tools/batch-qr.js";
+import { handleGetAvailableStyles } from "../src/mcp/tools/get-styles.js";
+import { handlePreviewUrl } from "../src/mcp/tools/preview-url.js";
 
 // Create the MCP handler using mcp-handler for proper Vercel support
 const handler = createMcpHandler(
