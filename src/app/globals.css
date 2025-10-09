@@ -159,6 +159,12 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sn-pro), serif;
+    overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+  }
+
+  html {
+    overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+    width: 100%;
   }
 
   /* Ensure JetBrains Mono is used everywhere */

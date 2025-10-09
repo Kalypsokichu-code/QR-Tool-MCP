@@ -33,7 +33,7 @@ export default function RootLayout({
         >
           <NuqsAdapter>{children}</NuqsAdapter>
           {/* Fixed UI controls in bottom right corner */}
-          <div className="fixed right-4 bottom-4 z-50 flex items-center gap-3">
+          <div className="fixed right-3 bottom-3 z-50 flex items-center gap-2 sm:right-6 sm:bottom-6 sm:gap-3">
             <SoundControl />
             <ThemeSwitcher />
           </div>
