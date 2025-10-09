@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { ListToolsRequestSchema, CallToolRequestSchema, } from "@modelcontextprotocol/sdk/types.js";
+import { CallToolRequestSchema, ListToolsRequestSchema, } from "@modelcontextprotocol/sdk/types.js";
+import { handleBatchQr } from "./tools/batch-qr.js";
 import { handleGenerateQrCode } from "./tools/generate-qr.js";
 import { handleGetAvailableStyles } from "./tools/get-styles.js";
 import { handlePreviewUrl } from "./tools/preview-url.js";
-import { handleBatchQr } from "./tools/batch-qr.js";
 const server = new Server({
     name: "qr-tool-mcp",
     version: "1.0.0",

@@ -1,3 +1,4 @@
+import { deflateSync } from "node:zlib";
 import type { BatchUrlInput } from "../schemas.js";
 
 export function handleBatchQr(input: BatchUrlInput): string {
@@ -52,15 +53,18 @@ export function handleBatchQr(input: BatchUrlInput): string {
       );
     }
 
-    // Encode the data as base64 for the URL
+    // Compress and encode the data for the URL
     const baseUrl = "https://qr-tool-mcp.vercel.app";
     const payload = JSON.stringify({
       urls,
       style: style || "slate-ember",
     });
-    const encodedData = Buffer.from(payload).toString("base64");
 
-    const downloadUrl = `${baseUrl}/api/batch-download-qr?data=${encodeURIComponent(encodedData)}`;
+    // Compress the payload using deflate to reduce URL size
+    const compressed = deflateSync(payload);
+    const encodedData = compressed.toString("base64url"); // base64url is URL-safe
+
+    const downloadUrl = `${baseUrl}/api/batch-download-qr?data=${encodedData}`;
 
     const result = {
       success: true,

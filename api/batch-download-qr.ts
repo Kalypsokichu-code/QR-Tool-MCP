@@ -1,3 +1,4 @@
+import { inflateSync } from "node:zlib";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import JSZip from "jszip";
 import { generateQrCode } from "../src/mcp/qr-generator.js";
@@ -52,18 +53,24 @@ function parseRequestUrls(req: VercelRequest): ParsedUrls {
     };
   }
 
-  // GET request - decode base64 encoded data
+  // GET request - decode and decompress base64 encoded data
   const { data, style: styleParam } = req.query;
 
   if (!data || typeof data !== "string") {
     throw new Error(
-      "Query parameter 'data' is required (base64 encoded JSON with urls array)"
+      "Query parameter 'data' is required (compressed base64 encoded JSON with urls array)"
     );
   }
 
   try {
-    const decoded = Buffer.from(data, "base64").toString("utf-8");
-    const parsed = JSON.parse(decoded);
+    // Decode from base64url (URL-safe base64)
+    const compressedBuffer = Buffer.from(data, "base64url");
+
+    // Decompress using inflate
+    const decompressed = inflateSync(compressedBuffer);
+    const jsonString = decompressed.toString("utf-8");
+
+    const parsed = JSON.parse(jsonString);
 
     if (!Array.isArray(parsed.urls)) {
       throw new Error("Decoded data must contain 'urls' array");
@@ -76,7 +83,7 @@ function parseRequestUrls(req: VercelRequest): ParsedUrls {
         (typeof styleParam === "string" ? styleParam : "slate-ember"),
     };
   } catch (_error) {
-    throw new Error("Could not decode base64 data parameter");
+    throw new Error("Could not decode/decompress base64 data parameter");
   }
 }
 
