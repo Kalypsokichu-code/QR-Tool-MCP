@@ -133,6 +133,7 @@ For detailed setup instructions:
 - **Zod** - Schema validation
 - **jsdom** - Headless DOM for server-side QR generation
 - **qr-code-styling** - QR code generation
+- **jszip** - ZIP file generation for batch downloads
 
 ### Code Quality
 - **Biome** - Linting and formatting
@@ -150,6 +151,21 @@ Generate a styled QR code with custom options.
 - `format` (optional) - "svg" or "png" (default: "svg")
 - `size` (optional) - Dimensions 256-2048px (default: 768)
 - `logoPosition` (optional) - "center" or "bottom-right"
+
+### `generate_qr_urls_batch`
+Generate QR codes for multiple URLs at once. Returns a single ZIP file download URL containing all QR codes with filenames based on the URLs.
+
+**Parameters:**
+- `urls` (required) - Array of URLs or text content to encode (max 100)
+- `style` (optional) - Style preset to apply to all QR codes (default: "slate-ember")
+
+**Returns:**
+A single download URL that delivers a ZIP file containing all QR codes as SVG files. Filenames are automatically generated from the URLs (e.g., `001-example-com-page.svg`, `002-github-com-user.svg`).
+
+**Example:**
+```
+Generate QR codes for these URLs: https://example.com, https://github.com/user, https://twitter.com/handle
+```
 
 ### `get_available_styles`
 List all available QR code style presets with color schemes.

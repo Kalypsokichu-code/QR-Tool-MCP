@@ -5,6 +5,7 @@ import { ListToolsRequestSchema, CallToolRequestSchema, } from "@modelcontextpro
 import { handleGenerateQrCode } from "./tools/generate-qr.js";
 import { handleGetAvailableStyles } from "./tools/get-styles.js";
 import { handlePreviewUrl } from "./tools/preview-url.js";
+import { handleBatchQr } from "./tools/batch-qr.js";
 const server = new Server({
     name: "qr-tool-mcp",
     version: "1.0.0",
@@ -93,6 +94,40 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
                     required: ["url"],
                 },
             },
+            {
+                name: "generate_qr_urls_batch",
+                description: "Generate QR code download URLs for multiple URLs at once. Perfect for batch processing CSV files or lists. Returns a single ZIP file download URL containing all QR codes with filenames based on the URLs. Maximum 100 URLs per batch.",
+                inputSchema: {
+                    type: "object",
+                    properties: {
+                        urls: {
+                            type: "array",
+                            items: {
+                                type: "string",
+                            },
+                            maxItems: 100,
+                            description: "Array of URLs or text content to encode (max 100)",
+                        },
+                        style: {
+                            type: "string",
+                            enum: [
+                                "slate-ember",
+                                "ink-lime",
+                                "charcoal-cyan",
+                                "night-sky",
+                                "graphite-gold",
+                                "espresso-rose",
+                                "plum-ice",
+                                "forest-mint",
+                                "cocoa-orange",
+                                "mono-high",
+                            ],
+                            description: "Style preset to apply to all QR codes. Default: slate-ember",
+                        },
+                    },
+                    required: ["urls"],
+                },
+            },
         ],
     };
 });
@@ -126,6 +161,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             case "preview_qr_url": {
                 // biome-ignore lint/suspicious/noExplicitAny: MCP SDK requires dynamic args
                 const result = handlePreviewUrl(args);
+                return {
+                    content: [
+                        {
+                            type: "text",
+                            text: result,
+                        },
+                    ],
+                };
+            }
+            case "generate_qr_urls_batch": {
+                // biome-ignore lint/suspicious/noExplicitAny: MCP SDK requires dynamic args
+                const result = handleBatchQr(args);
                 return {
                     content: [
                         {

@@ -16,5 +16,13 @@
     "verbatimModuleSyntax": false
   },
   "include": ["src/mcp/**/*", "src/app/qr-generator/qr-styles.ts"],
-  "exclude": ["node_modules", "dist", ".next", "src/app/**/*", "src/components/**/*", "src/hooks/**/*", "src/lib/**/*"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".next",
+    "src/app/**/*",
+    "src/components/**/*",
+    "src/hooks/**/*",
+    "src/lib/**/*"
+  ]
 }

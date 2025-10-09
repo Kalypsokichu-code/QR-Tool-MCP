@@ -1,4 +1,3 @@
-import { generateDownloadUrl } from "../qr-generator.js";
 import type { BatchUrlInput } from "../schemas.js";
 
 export function handleBatchQr(input: BatchUrlInput): string {
@@ -18,30 +17,58 @@ export function handleBatchQr(input: BatchUrlInput): string {
     );
   }
 
-  try {
-    const results = urls.map((url, index) => {
-      // Validate each URL
-      if (!url || typeof url !== "string" || url.trim() === "") {
-        return {
-          index,
-          url,
-          error: "Invalid or empty URL",
-          downloadUrl: null,
-        };
-      }
+  // Check batch size limit
+  const maxBatchSize = 100;
+  if (urls.length > maxBatchSize) {
+    return JSON.stringify(
+      {
+        success: false,
+        error: "Batch size too large",
+        message: `Maximum ${maxBatchSize} URLs allowed per batch. You provided ${urls.length} URLs.`,
+      },
+      null,
+      2
+    );
+  }
 
-      return {
-        index,
-        url,
-        downloadUrl: generateDownloadUrl(url, style),
-      };
+  try {
+    // Validate URLs
+    const invalidUrls = urls
+      .map((url, index) => ({ url, index }))
+      .filter(
+        ({ url }) => !url || typeof url !== "string" || url.trim() === ""
+      );
+
+    if (invalidUrls.length > 0) {
+      return JSON.stringify(
+        {
+          success: false,
+          error: "Invalid URLs detected",
+          message: `Found ${invalidUrls.length} invalid or empty URLs at indices: ${invalidUrls.map((u) => u.index).join(", ")}`,
+          invalidUrls,
+        },
+        null,
+        2
+      );
+    }
+
+    // Encode the data as base64 for the URL
+    const baseUrl = "https://qr-tool-mcp.vercel.app";
+    const payload = JSON.stringify({
+      urls,
+      style: style || "slate-ember",
     });
+    const encodedData = Buffer.from(payload).toString("base64");
+
+    const downloadUrl = `${baseUrl}/api/batch-download-qr?data=${encodeURIComponent(encodedData)}`;
 
     const result = {
       success: true,
       count: urls.length,
-      results,
-      message: `Generated ${urls.length} QR code download URLs. Each result includes the URL and downloadUrl for instant SVG download.`,
+      style: style || "slate-ember",
+      downloadUrl,
+      message: `Generated batch download URL for ${urls.length} QR codes. Download the ZIP file to get all QR codes with filenames based on their URLs.`,
+      note: "The ZIP file will contain SVG files named like: 001-example-com-page.svg, 002-github-com-user.svg, etc.",
     };
 
     return JSON.stringify(result, null, 2);
@@ -52,7 +79,7 @@ export function handleBatchQr(input: BatchUrlInput): string {
       {
         success: false,
         error: errorMessage,
-        message: "Failed to generate batch QR code URLs",
+        message: "Failed to generate batch QR code download URL",
       },
       null,
       2

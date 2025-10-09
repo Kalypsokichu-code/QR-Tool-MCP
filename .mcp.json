@@ -9,11 +9,7 @@
     "url": "https://github.com/Kalypsokichu-code/qr-tool-mcp"
   },
   "capabilities": {
-    "tools": [
-      "generate_qr_code",
-      "get_available_styles",
-      "preview_qr_url"
-    ]
+    "tools": ["generate_qr_code", "get_available_styles", "preview_qr_url"]
   },
   "transport": {
     "stdio": {
