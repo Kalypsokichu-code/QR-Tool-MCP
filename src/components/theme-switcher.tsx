@@ -42,7 +42,7 @@ function ThemeOption({
           `relative flex size-8 cursor-pointer items-center justify-center ${getRadius("iconButton")} transition-all [&_svg]:size-4`,
           isActive
             ? "text-neutral-950 dark:text-neutral-950"
-            : "text-neutral-400 hover:text-neutral-950 dark:text-neutral-500 dark:hover:text-neutral-950"
+            : "text-neutral-400 hover:text-neutral-950 dark:text-neutral-500 dark:hover:text-neutral-950",
         )}
         onClick={handleClick}
         type="button"

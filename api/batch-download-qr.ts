@@ -58,7 +58,7 @@ function parseRequestUrls(req: VercelRequest): ParsedUrls {
 
   if (!data || typeof data !== "string") {
     throw new Error(
-      "Query parameter 'data' is required (compressed base64 encoded JSON with urls array)"
+      "Query parameter 'data' is required (compressed base64 encoded JSON with urls array)",
     );
   }
 
@@ -89,7 +89,7 @@ function parseRequestUrls(req: VercelRequest): ParsedUrls {
 
 async function generateQrCodesZip(
   urls: string[],
-  style: string
+  style: string,
 ): Promise<Buffer> {
   const zip = new JSZip();
   const size = 768;
@@ -123,7 +123,6 @@ async function generateQrCodesZip(
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "GET" && req.method !== "POST") {
-    // biome-ignore lint/style/noMagicNumbers: HTTP status code
     return res.status(405).json({
       error: "Method not allowed",
       message: "Only GET and POST requests are supported",
@@ -134,7 +133,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { urls, style } = parseRequestUrls(req);
 
     if (urls.length === 0) {
-      // biome-ignore lint/style/noMagicNumbers: HTTP status code
       return res.status(400).json({
         error: "Empty URLs array",
         message: "At least one URL is required",
@@ -143,7 +141,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const maxBatchSize = 100;
     if (urls.length > maxBatchSize) {
-      // biome-ignore lint/style/noMagicNumbers: HTTP status code
       return res.status(400).json({
         error: "Batch size too large",
         message: `Maximum ${maxBatchSize} URLs allowed per batch`,
@@ -165,12 +162,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader("Content-Length", zipBuffer.length.toString());
     res.setHeader("Cache-Control", "no-cache");
 
-    // biome-ignore lint/style/noMagicNumbers: HTTP status code
     return res.status(200).send(zipBuffer);
   } catch (error) {
     // biome-ignore lint/suspicious/noConsole: Needed for serverless logging
     console.error("Batch download QR error:", error);
-    // biome-ignore lint/style/noMagicNumbers: HTTP status code
     return res.status(500).json({
       error: "Internal server error",
       message: error instanceof Error ? error.message : "Unknown error",

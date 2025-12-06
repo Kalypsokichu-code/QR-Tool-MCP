@@ -20,17 +20,16 @@ const server = new Server(
     capabilities: {
       tools: {},
     },
-  }
+  },
 );
 
-// biome-ignore lint/suspicious/useAwait: MCP SDK requires async
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
       {
         name: "generate_qr_code",
         description:
-          "Generate a QR code with custom styling. Returns base64-encoded image data that can be saved or displayed. Supports multiple visual styles and optional logo embedding.",
+          "Generate a QR code with custom styling. Returns base64-encoded SVG image data that can be saved or displayed. Supports multiple visual styles.",
         inputSchema: {
           type: "object",
           properties: {
@@ -55,27 +54,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               description:
                 "Visual style preset for the QR code. Default: slate-ember",
             },
-            format: {
-              type: "string",
-              enum: ["svg", "png"],
-              description: "Output format. Default: svg",
-            },
             size: {
               type: "number",
               minimum: 256,
               maximum: 2048,
               description:
                 "QR code dimensions in pixels. Default: 768. Range: 256-2048",
-            },
-            logoUrl: {
-              type: "string",
-              description:
-                "Optional URL to a logo/icon to embed in the QR code",
-            },
-            logoPosition: {
-              type: "string",
-              enum: ["center", "bottom-right"],
-              description: "Logo placement. Default: center",
             },
           },
           required: ["url"],
@@ -222,7 +206,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
               message: `Tool execution failed: ${name}`,
             },
             null,
-            2
+            2,
           ),
         },
       ],

@@ -19,11 +19,10 @@ const server = new Server(
     capabilities: {
       tools: {},
     },
-  }
+  },
 );
 
 // Handle tool listing
-// biome-ignore lint/suspicious/useAwait: MCP SDK requires async
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
@@ -109,7 +108,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 });
 
 // Handle tool calls
-// biome-ignore lint/suspicious/useAwait: MCP SDK requires async handler
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
@@ -118,8 +116,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case "generate_qr_url": {
         // biome-ignore lint/suspicious/noExplicitAny: MCP SDK dynamic args
         const { url, style } = args as any;
-        // biome-ignore lint/suspicious/noConsole: Debug logging
-        console.log("generate_qr_url params:", { url, style });
         const result = handlePreviewUrl({ url, style });
         return {
           content: [
@@ -146,11 +142,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case "generate_qr_urls_batch": {
         // biome-ignore lint/suspicious/noExplicitAny: MCP SDK dynamic args
         const { urls, style } = args as any;
-        // biome-ignore lint/suspicious/noConsole: Debug logging
-        console.log("generate_qr_urls_batch params:", {
-          urlsCount: urls?.length,
-          style,
-        });
         const result = handleBatchQr({ urls, style });
         return {
           content: [
@@ -180,7 +171,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
               message: `Tool execution failed: ${name}`,
             },
             null,
-            2
+            2,
           ),
         },
       ],
@@ -193,7 +184,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Only allow POST requests
   if (req.method !== "POST") {
-    // biome-ignore lint/style/noMagicNumbers: Standard HTTP status code
     res.status(405).json({
       jsonrpc: "2.0",
       error: {
@@ -222,7 +212,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // biome-ignore lint/suspicious/noConsole: Error logging
     console.error("Error handling MCP request:", error);
     if (!res.writableEnded) {
-      // biome-ignore lint/style/noMagicNumbers: Standard HTTP status code
       res.status(500).json({
         jsonrpc: "2.0",
         error: {

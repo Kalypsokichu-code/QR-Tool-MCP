@@ -2,14 +2,7 @@ export type QrGeneratorOptions = {
     data: string;
     styleId: string;
     size: number;
-    format: "svg" | "png";
-    logoSvgContent?: string;
-    logoSizePercent?: number;
-    logoStrokePx?: number;
-    logoPosition?: {
-        x: number;
-        y: number;
-    };
+    format: "svg";
 };
 export declare function generateQrCode(options: QrGeneratorOptions): Promise<string>;
 export declare function getAvailableStyles(): {

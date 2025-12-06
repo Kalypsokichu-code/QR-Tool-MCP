@@ -67,7 +67,7 @@ export function QrClient() {
       data: parseAsString.withDefault("https://instagram.com/kalypsodesigns"),
       style: parseAsString.withDefault(STYLES[0]?.id || "slate-ember"),
     },
-    { history: "replace" }
+    { history: "replace" },
   );
 
   const DEFAULT_SIZE = 768;

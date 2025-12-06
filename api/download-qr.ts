@@ -4,7 +4,6 @@ import { generateQrCode } from "../src/mcp/qr-generator.js";
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Only allow GET requests
   if (req.method !== "GET") {
-    // biome-ignore lint/style/noMagicNumbers: HTTP status code
     return res.status(405).json({
       error: "Method not allowed",
       message: "Only GET requests are supported",
@@ -16,7 +15,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Validate required parameters
     if (!data || typeof data !== "string") {
-      // biome-ignore lint/style/noMagicNumbers: HTTP status code
       return res.status(400).json({
         error: "Missing required parameter",
         message: "Query parameter 'data' is required",
@@ -45,12 +43,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
     res.setHeader("Cache-Control", "public, max-age=3600"); // Cache for 1 hour
 
-    // biome-ignore lint/style/noMagicNumbers: HTTP status code
     return res.status(200).send(svgContent);
   } catch (error) {
     // biome-ignore lint/suspicious/noConsole: Needed for serverless logging
     console.error("Download QR error:", error);
-    // biome-ignore lint/style/noMagicNumbers: HTTP status code
     return res.status(500).json({
       error: "Internal server error",
       message: error instanceof Error ? error.message : "Unknown error",

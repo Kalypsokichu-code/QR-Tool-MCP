@@ -17,20 +17,7 @@ export function createQrInstance(options: QrOptions) {
   });
 }
 
-// --- Refactoring for rebuildQr to reduce complexity and remove magic numbers ---
-
 const SVG_NS = "http://www.w3.org/2000/svg";
-const MIN_CORNER_RADIUS = 8;
-const CORNER_RADIUS_FACTOR = 0.09;
-const RANDOM_STRING_RADIX = 36;
-const SLICE_START = 2;
-const MIN_LOGO_SIZE_PERCENT = 4;
-const MAX_LOGO_SIZE_PERCENT = 40;
-const PERCENT_DIVISOR = 100;
-const MIN_LOGO_STROKE_PX = 1;
-const MAX_LOGO_STROKE_PX = 12;
-const DEFAULT_LOGO_DIMENSION = "100";
-const HALF = 2;
 
 type Dimensions = { w: number; h: number };
 
@@ -38,20 +25,18 @@ function getSvgDimensions(svg: SVGSVGElement, defaultSize: number): Dimensions {
   const widthAttr = svg.getAttribute("width");
   const heightAttr = svg.getAttribute("height");
   const vb = svg.viewBox?.baseVal;
-  const w = widthAttr ? Number(widthAttr) : vb?.width || defaultSize;
-  const h = heightAttr ? Number(heightAttr) : vb?.height || defaultSize;
-  return { w, h };
+  return {
+    w: widthAttr ? Number(widthAttr) : vb?.width || defaultSize,
+    h: heightAttr ? Number(heightAttr) : vb?.height || defaultSize,
+  };
 }
 
 function applyQrCodeStyling(
   svg: SVGSVGElement,
   { w, h }: Dimensions,
-  backgroundColor: string
+  backgroundColor: string,
 ) {
-  const radius = Math.max(
-    MIN_CORNER_RADIUS,
-    Math.min(w, h) * CORNER_RADIUS_FACTOR
-  );
+  const radius = Math.max(8, Math.min(w, h) * 0.09);
 
   let defs = svg.querySelector("defs");
   if (!defs) {
@@ -59,9 +44,7 @@ function applyQrCodeStyling(
     svg.insertBefore(defs, svg.firstChild);
   }
 
-  const clipId = `qrClip-${Date.now().toString(
-    RANDOM_STRING_RADIX
-  )}-${Math.random().toString(RANDOM_STRING_RADIX).slice(SLICE_START)}`;
+  const clipId = `qrClip-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
   const clipPath = document.createElementNS(SVG_NS, "clipPath");
   clipPath.setAttribute("id", clipId);
 
@@ -108,7 +91,7 @@ function applyQrCodeStyling(
 
 function createLogoPart(
   sourceElement: SVGSVGElement,
-  attributes: Record<string, string>
+  attributes: Record<string, string>,
 ): SVGGElement {
   const group = document.createElementNS(SVG_NS, "g");
   group.innerHTML = sourceElement.innerHTML;
@@ -127,7 +110,7 @@ function addLogo(
     logoStrokePx: number;
     logoPosition: { x: number; y: number };
     fillColor: string;
-  }
+  },
 ) {
   const {
     dimensions: { w, h },
@@ -141,34 +124,20 @@ function addLogo(
   const tempDiv = document.createElement("div");
   tempDiv.innerHTML = logoSvgContent;
   const svgElement = tempDiv.querySelector("svg");
-  if (!svgElement) {
-    return;
-  }
+  if (!svgElement) return;
 
   const diameter =
-    (Math.min(w, h) *
-      Math.max(
-        MIN_LOGO_SIZE_PERCENT,
-        Math.min(MAX_LOGO_SIZE_PERCENT, logoSizePercent)
-      )) /
-    PERCENT_DIVISOR;
-  const strokeWidth = Math.max(
-    MIN_LOGO_STROKE_PX,
-    Math.min(MAX_LOGO_STROKE_PX, logoStrokePx)
-  );
+    (Math.min(w, h) * Math.max(4, Math.min(40, logoSizePercent))) / 100;
+  const strokeWidth = Math.max(1, Math.min(12, logoStrokePx));
   const cx = w * logoPosition.x;
   const cy = h * logoPosition.y;
 
   const svgWidth =
     svgElement.viewBox?.baseVal?.width ||
-    Number.parseFloat(
-      svgElement.getAttribute("width") || DEFAULT_LOGO_DIMENSION
-    );
+    Number.parseFloat(svgElement.getAttribute("width") || "100");
   const svgHeight =
     svgElement.viewBox?.baseVal?.height ||
-    Number.parseFloat(
-      svgElement.getAttribute("height") || DEFAULT_LOGO_DIMENSION
-    );
+    Number.parseFloat(svgElement.getAttribute("height") || "100");
   const scale = diameter / Math.max(svgWidth, svgHeight);
 
   const logoGroup = document.createElementNS(SVG_NS, "g");
@@ -177,7 +146,7 @@ function addLogo(
   const svgGroup = document.createElementNS(SVG_NS, "g");
   svgGroup.setAttribute(
     "transform",
-    `scale(${scale}) translate(-${svgWidth / HALF}, -${svgHeight / HALF})`
+    `scale(${scale}) translate(-${svgWidth / 2}, -${svgHeight / 2})`,
   );
 
   const strokeGroup = createLogoPart(svgElement, {
@@ -221,9 +190,7 @@ export async function rebuildQr(params: {
   await qr.append(container);
 
   const svg = container.querySelector("svg");
-  if (!svg) {
-    return { svg: null, qr };
-  }
+  if (!svg) return { svg: null, qr };
 
   try {
     const s = resolveStyle(options.styleId);
@@ -242,7 +209,7 @@ export async function rebuildQr(params: {
       });
     }
   } catch {
-    // ignore DOM failures
+    // Ignore DOM failures
   }
 
   return { svg, qr };

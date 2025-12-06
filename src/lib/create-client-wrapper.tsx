@@ -40,7 +40,7 @@ export function createClientWrapper<P = Record<string, never>>({
 
         if (!candidate) {
           throw new Error(
-            `createClientWrapper: export "${exportName}" not found in client module`
+            `createClientWrapper: export "${exportName}" not found in client module`,
           );
         }
 
@@ -56,6 +56,6 @@ export function createClientWrapper<P = Record<string, never>>({
           Loading…
         </div>
       ),
-    }
+    },
   );
 }

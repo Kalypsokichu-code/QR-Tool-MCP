@@ -37,7 +37,7 @@ export function FileSelectButton({
       // Allow selecting the same file again by resetting value
       e.target.value = "";
     },
-    [onFilesSelected]
+    [onFilesSelected],
   );
 
   return (

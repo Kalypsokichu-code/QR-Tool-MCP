@@ -14,7 +14,7 @@ export function handleBatchQr(input: BatchUrlInput): string {
           "The 'urls' parameter is required and must be a non-empty array",
       },
       null,
-      2
+      2,
     );
   }
 
@@ -28,7 +28,7 @@ export function handleBatchQr(input: BatchUrlInput): string {
         message: `Maximum ${maxBatchSize} URLs allowed per batch. You provided ${urls.length} URLs.`,
       },
       null,
-      2
+      2,
     );
   }
 
@@ -37,7 +37,7 @@ export function handleBatchQr(input: BatchUrlInput): string {
     const invalidUrls = urls
       .map((url, index) => ({ url, index }))
       .filter(
-        ({ url }) => !url || typeof url !== "string" || url.trim() === ""
+        ({ url }) => !url || typeof url !== "string" || url.trim() === "",
       );
 
     if (invalidUrls.length > 0) {
@@ -49,7 +49,7 @@ export function handleBatchQr(input: BatchUrlInput): string {
           invalidUrls,
         },
         null,
-        2
+        2,
       );
     }
 
@@ -86,7 +86,7 @@ export function handleBatchQr(input: BatchUrlInput): string {
         message: "Failed to generate batch QR code download URL",
       },
       null,
-      2
+      2,
     );
   }
 }

@@ -1,26 +1,19 @@
 import { generateQrCode } from "../qr-generator.js";
 export async function handleGenerateQrCode(input) {
-    const { url, style = "slate-ember", format = "svg", size = 768, logoPosition = "center", } = input;
-    const positionMap = {
-        center: { x: 0.5, y: 0.5 },
-        "bottom-right": { x: 0.82, y: 0.82 },
-    };
+    const { url, style = "slate-ember", size = 768 } = input;
     try {
         const base64Data = await generateQrCode({
             data: url,
             styleId: style,
             size,
-            format,
-            logoPosition: positionMap[logoPosition],
+            format: "svg",
         });
-        const mimeType = format === "svg" ? "image/svg+xml" : "image/png";
         const result = {
             success: true,
-            format,
+            format: "svg",
             size,
             style,
-            data: `data:${mimeType};base64,${base64Data}`,
-            // biome-ignore lint/style/noMagicNumbers: URL truncation length
+            data: `data:image/svg+xml;base64,${base64Data}`,
             message: `QR code generated successfully for: ${url.substring(0, 50)}${url.length > 50 ? "..." : ""}`,
         };
         return JSON.stringify(result, null, 2);

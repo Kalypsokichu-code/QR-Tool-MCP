@@ -14,7 +14,7 @@ export function handlePreviewUrl(input: PreviewUrlInput): string {
           "The 'url' parameter is required and must be a non-empty string",
       },
       null,
-      2
+      2,
     );
   }
 
@@ -41,7 +41,7 @@ export function handlePreviewUrl(input: PreviewUrlInput): string {
         message: "Failed to generate URLs",
       },
       null,
-      2
+      2,
     );
   }
 }

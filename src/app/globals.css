@@ -1,31 +1,18 @@
 @import "tailwindcss";
-@import "../styles/squircle-utilities.css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* OKLCH color examples - LIGHT MODE */
-  --oklch-primary: oklch(0.7 0.259 46.59); /* Vibrant orange primary */
-  --oklch-secondary: oklch(0.8 0.12 120); /* Green */
-  --oklch-accent: oklch(0.75 0.18 350); /* Pink */
-  --oklch-warning: oklch(0.8 0.15 80); /* Yellow */
-  --oklch-error: oklch(0.65 0.2 15); /* Red */
-  --oklch-purple: oklch(0.75 0.15 300); /* Purple */
-  --oklch-neutral-400: oklch(0.65 0.005 240); /* Light neutral */
-  --oklch-neutral-500: oklch(0.55 0.005 240); /* Medium neutral */
-  --oklch-neutral-950: oklch(0.15 0.005 240); /* Dark neutral */
+  --oklch-neutral-400: oklch(0.65 0.005 240);
+  --oklch-neutral-500: oklch(0.55 0.005 240);
+  --oklch-neutral-950: oklch(0.15 0.005 240);
 
-  /* Light mode theme variables */
   --radius: 0.625rem;
-  --background: oklch(
-    0.92 0.0197 90.71
-  ); /* Warm light background instead of white */
+  --background: oklch(0.92 0.0197 90.71);
   --foreground: oklch(0.147 0.004 49.25);
-  --card: oklch(
-    0.925 0.0444 92.65
-  ); /* Match card background to new background */
+  --card: oklch(0.925 0.0444 92.65);
   --card-foreground: oklch(0.147 0.004 49.25);
-  --popover: oklch(0.925 0.0444 92.65); /* Match popover background */
+  --popover: oklch(0.925 0.0444 92.65);
   --popover-foreground: oklch(0.147 0.004 49.25);
   --primary: oklch(0.216 0.006 56.043);
   --primary-foreground: oklch(0.985 0.001 106.423);
@@ -39,19 +26,6 @@
   --border: oklch(0.75 0.015 48.717);
   --input: oklch(0.88 0.005 48.717);
   --ring: oklch(0.709 0.01 56.259);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0.001 106.423);
-  --sidebar-foreground: oklch(0.147 0.004 49.25);
-  --sidebar-primary: oklch(0.216 0.006 56.043);
-  --sidebar-primary-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-accent: oklch(0.97 0.001 106.424);
-  --sidebar-accent-foreground: oklch(0.216 0.006 56.043);
-  --sidebar-border: oklch(0.923 0.003 48.717);
-  --sidebar-ring: oklch(0.709 0.01 56.259);
 }
 
 @theme inline {
@@ -60,42 +34,24 @@
   --font-sans: var(--font-sn-pro);
   --font-mono: var(--font-sn-pro);
 
-  /* Add OKLCH colors to Tailwind theme */
-  --color-primary: var(--oklch-primary);
-  --color-secondary: var(--oklch-secondary);
-  --color-accent: var(--accent);
-  --color-warning: var(--oklch-warning);
-  --color-error: var(--oklch-error);
-  --color-purple: var(--oklch-purple);
   --color-neutral-400: var(--oklch-neutral-400);
   --color-neutral-500: var(--oklch-neutral-500);
   --color-neutral-950: var(--oklch-neutral-950);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --popover-border: var(--border);
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
-  /* Added for command palette border color */
   --color-popover-border: var(--popover-border);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
@@ -106,18 +62,10 @@
 }
 
 .dark {
-  /* Dark mode OKLCH colors */
-  --oklch-primary: oklch(0.6 0.259 46.59); /* Darker orange for dark mode */
-  --oklch-secondary: oklch(0.7 0.12 120);
-  --oklch-accent: oklch(0.65 0.18 350);
-  --oklch-warning: oklch(0.75 0.15 80);
-  --oklch-error: oklch(0.6 0.2 15);
-  --oklch-purple: oklch(0.65 0.15 300);
-  --oklch-neutral-400: oklch(0.75 0.005 240); /* Lighter in dark mode */
-  --oklch-neutral-500: oklch(0.65 0.005 240); /* Lighter in dark mode */
-  --oklch-neutral-950: oklch(0.95 0.005 240); /* Much lighter in dark mode */
+  --oklch-neutral-400: oklch(0.75 0.005 240);
+  --oklch-neutral-500: oklch(0.65 0.005 240);
+  --oklch-neutral-950: oklch(0.95 0.005 240);
 
-  /* Dark mode theme variables */
   --background: oklch(0.147 0.004 49.25);
   --foreground: oklch(0.985 0.001 106.423);
   --card: oklch(0.216 0.006 56.043);
@@ -137,42 +85,25 @@
   --popover-border: var(--border);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.553 0.013 58.071);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.216 0.006 56.043);
-  --sidebar-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-accent: oklch(0.268 0.007 34.298);
-  --sidebar-accent-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.553 0.013 58.071);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
     font-family: var(--font-sn-pro), serif;
-    overflow-x: hidden; /* Prevent horizontal scroll on mobile */
   }
 
   html {
-    overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
     width: 100%;
   }
 
-  /* Ensure JetBrains Mono is used everywhere */
-  * {
+  body {
+    @apply bg-background text-foreground;
     font-family: var(--font-sn-pro), serif;
+    overflow-x: hidden;
   }
 
-  /* Accessibility: Focus indicators */
   *:focus {
     @apply outline-none;
   }
@@ -181,7 +112,6 @@
     @apply outline-ring outline-2 outline-offset-2;
   }
 
-  /* Better focus for interactive elements */
   button:focus-visible,
   a:focus-visible,
   input:focus-visible,
@@ -192,20 +122,16 @@
     @apply outline-ring ring-ring/20 ring-2 outline-2 outline-offset-2;
   }
 
-  /* Text selection styling */
   ::selection {
-    background-color: oklch(
-      0.7 0.259 46.59 / 0.3
-    ); /* Orange tinted with transparency */
+    background-color: oklch(0.7 0.259 46.59 / 0.3);
     color: var(--foreground);
   }
 
   ::-moz-selection {
-    background-color: oklch(0.7 0.259 46.59 / 0.3); /* Firefox specific */
+    background-color: oklch(0.7 0.259 46.59 / 0.3);
     color: var(--foreground);
   }
 
-  /* Skip to content link */
   .skip-to-content {
     @apply bg-background text-foreground absolute top-2 left-[-9999px] z-[9999] px-4 py-2 text-sm font-medium;
   }
@@ -215,80 +141,3 @@
   }
 }
 
-/* Default cursor is visible - no custom cursor in this app */
-
-/* Carousel Animation Optimizations */
-.carousel-item-transition {
-  transition:
-    transform var(--carousel-duration, 700ms) cubic-bezier(0.4, 0, 0.2, 1),
-    opacity var(--carousel-duration, 700ms) cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
-}
-
-.carousel-active {
-  z-index: 20 !important;
-}
-
-/* Performance optimizations for video elements */
-.video-container {
-  contain: layout style paint;
-  transform: translateZ(0); /* Force GPU acceleration */
-}
-
-.video-container video {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-  will-change: auto;
-}
-
-/* Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: reduce) {
-  .carousel-item-transition {
-    transition-duration: 0.1s;
-  }
-
-  .carousel-item-transition * {
-    animation-duration: 0.1s !important;
-    transition-duration: 0.1s !important;
-  }
-}
-
-/* Grain background overlay */
-/* Adds a subtle grainy texture that sits above all content but doesn't interfere with user interactions */
-body::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* Ensure clicks pass through */
-  background-image: url("/grain-slow.gif");
-  background-repeat: repeat; /* Tile the texture */
-  background-size: auto;
-  opacity: 0.1; /* Lower opacity for subtle effect */
-  mix-blend-mode: overlay; /* Blend with underlying content */
-  z-index: 50; /* Above page content but below high-priority UI */
-}
-
-/* Respect users who prefer reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  body::after {
-    animation: none;
-  }
-}
-
-/* Brick hit fade animation */
-.brick-hit {
-  animation: brickFade 0.5s ease-out forwards;
-}
-
-@keyframes brickFade {
-  to {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-}

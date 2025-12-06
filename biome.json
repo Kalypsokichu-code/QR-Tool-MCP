@@ -13,14 +13,8 @@
       "!**/*.min.mjs",
       "!node_modules",
       "!.next",
-      "!dist"
-    ],
-    "experimentalScannerIgnores": [
-      ".next/**",
-      "components.json",
-      "public/**",
-      "node_modules/**",
-      "dist/**"
+      "!dist",
+      "!**/*.css"
     ],
     "ignoreUnknown": false
   },
@@ -56,13 +50,5 @@
       }
     }
   },
-  "overrides": [
-    {
-      "includes": ["**/*.css"],
-      "linter": {
-        "enabled": false
-      }
-    }
-  ],
-  "extends": ["ultracite"]
+  "extends": ["ultracite/next"]
 }
